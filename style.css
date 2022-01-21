@@ -1,0 +1,63 @@
+.title {
+    font-size: 2em;
+    text-align: center;
+}
+
+.error {
+    border: 1px solid #f5c2c7;
+    padding: 6px 18px;
+    border-radius: 5px;
+    color: #842029;
+    background-color: #f8d7da;
+    margin-bottom: 10px;
+}
+
+input.rsa {
+    width: 100%;
+    display: block;
+    margin-bottom: 5px
+}
+
+div.service {
+    width: 50%;
+    display: block;
+    float: left;
+    margin-bottom: 5px
+}
+
+input.service {
+    width: 100%;
+    display: block;
+}
+
+div.submit {
+    clear: left;
+    width: 100%;
+    padding-top: 20px
+}
+
+input[type=submit] {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    font-size: 1.5em;
+    border: none;
+    background-color: #04AA6A;
+    padding: 6px 18px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.action {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.old_value {
+    color: darkred;
+}
+
+.new_value {
+    color: green;
+}
