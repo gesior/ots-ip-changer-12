@@ -66,7 +66,7 @@ class ExeEditor
         $lines = explode("\r\n", $file);
 
         $progressText = '';
-        foreach ($lines as $line) {
+        foreach ($lines as $i => $line) {
             foreach ($this->battlEyeDisableBytes as $fromBytes => $toBytes) {
                 if (strpos($line, $fromBytes) !== false) {
                     $line = str_replace($fromBytes, $toBytes, $line);
@@ -107,7 +107,11 @@ class ExeEditor
                 }
             }
 
-            $newClientExe .= $line . "\r\n";
+            $newClientExe .= $line;
+            // some client .exes end with "\r\n" and some not, we must detect it
+            if ($i < count($lines) - 1 || empty($line)) {
+                $newClientExe .= "\r\n";
+            }
         }
 
         $zip = new ZipArchive;
