@@ -11,9 +11,80 @@ class ExeEditor
     {
         // https://otland.net/threads/disable-battleye-error-12-20.266831/
         $this->battlEyeDisableBytes = [
-            "\x84\xC0\x74\x04\xC6\x47\x05\x01" => "\x84\xC0\x90\x90\xC6\x47\x05\x01",
-            "\xC6\x45\xD7\x00\xC6\x45\xCF\x00" => "\xC6\x45\xD7\x00\xC6\x45\xCF\x00",
-            "\x8D\x8D\x70\xFF\xFF\xFF\x75\x0E" => "\x8D\x8D\x70\xFF\xFF\xFF\xEB\x0E",
+            '12.20' => [
+                // 12.20
+                "\x84\xC0\x74\x04\xC6\x47\x05\x01" => "\x84\xC0\x90\x90\xC6\x47\x05\x01",
+            ],
+            '12.40' => [
+                // 12.40.9997
+                "\xC6\x45\xD7\x00\xC6\x45\xCF\x00" => "\xC6\x45\xD7\x00\xC6\x45\xCF\x01",
+            ],
+            '12.72' => [
+                // 12.72.11272
+                "\x8D\x8D\x70\xFF\xFF\xFF\x75\x0E" => "\x8D\x8D\x70\xFF\xFF\xFF\xEB\x0E",
+            ],
+            '12.81' => [
+                // 12.81.11476
+                "\x8D\x8D\x70\xFF\xFF\xFF\x75\x0E" => "\x8D\x8D\x70\xFF\xFF\xFF\xEB\x0E",
+            ],
+            '12.85' => [
+                // 12.85
+                "\x8D\x8D\x70\xFF\xFF\xFF\x75\x0E" => "\x8D\x8D\x70\xFF\xFF\xFF\xEB\x0E",
+            ],
+            '12.86' => [
+                // 12.86
+                "\x8D\x4D\x84\x75\x0E\xE8\x1B\x41" => "\x8D\x4D\x84\xEB\x0E\xE8\x1B\x41",
+            ],
+            '12.87' => [
+                // 12.87
+                "\x8D\x4D\x84\x75\x0E\xE8\xF8\x24" => "\x8D\x4D\x84\xEB\x0E\xE8\xF8\x24",
+            ],
+            '12.90' => [
+                // 12.90
+                "\x8D\x4D\x8C\x75" => "\x8D\x4D\x8C\xEB",
+            ],
+            '12.91' => [
+                // 12.91.12329
+                "\x00\x00\x00\x8D\x4D\x80\x75\x0E\xE8" => "\x00\x00\x00\x8D\x4D\x80\xEB\x0E\xE8",
+            ],
+            '13.05' => [
+                // 13.05.12715
+                "\x8D\x4D\xB4\x75" => "\x8D\x4D\xB4\xEB",
+            ],
+            '13.10' => [
+                // 13.10.12858
+                "\x8D\x4D\xB8\x75" => "\x8D\x4D\xB8\xEB",
+                // 13.10.12892
+                "\x8D\x4D\xB8\x75\x0E\xE8\xEA\x42\xF3" => "\x8D\x4D\xB8\xEB\x0E\xE8\xEA\x42\xF3",
+                // 13.11.12985
+                "\x8D\x4D\xC0\x51\x3B\x45\xE4\x74\x0D\x8B\xC8" => "\x8D\x4D\xC0\x51\x3B\x45\xE4\xEB\x0D\x8B\xC8",
+            ],
+            '13.20' => [
+                // 13.20.unknown
+                "\x75\x0E\xE8\xB5" => "\xEB\x0E\xE8\xB5",
+                // 13.20.13709
+                "\xFF\xFF\xFF\x75\x0E\xE8\xDF" => "\xFF\xFF\xFF\xEB\x0E\xE8\xDF",
+            ],
+            '13.21' => [
+                // 13.21.13810
+                "\xFF\xFF\xFF\x75\x0E\xE8\xCF" => "\xFF\xFF\xFF\xEB\x0E\xE8\xCF",
+            ],
+            '13.22' => [
+                // 13.22.14242
+                "\x8D\x4D\xB4\x75\x0E\xE8" => "\x8D\x4D\xB4\xEB\x0E\xE8",
+            ],
+            '13.34' => [
+                // 13.34.14631
+                "\x8D\x4D\xB4\x75\x0E\xE8" => "\x8D\x4D\xB4\xEB\x0E\xE8",
+            ],
+            '13.40' => [
+                // 13.40.54ea79
+                "\x8D\x4D\xB4\x75\x0E\xE8" => "\x8D\x4D\xB4\xEB\x0E\xE8",
+            ],
+            '14.11' => [
+                // 14.11.0fbf6c
+                "\x00\x00\x00\x75\x0F\xE8\xC3\x43\xEF\xFF" => "\x00\x00\x00\xEB\x0F\xE8\xC3\x43\xEF\xFF",
+            ],
         ];
 
         $this->rsa = '9B646903B45B07AC956568D87353BD7165139DD7940703B03E6DD079399661B4' .
@@ -61,19 +132,25 @@ class ExeEditor
 
         $file = file_get_contents($inputFilePath);
 
+        $progressText = '';
+        foreach ($this->battlEyeDisableBytes as $tibiaClientVersion => $patches) {
+            if (strpos($file, $tibiaClientVersion) !== false) {
+                foreach ($patches as $fromBytes => $toBytes) {
+                    if (strpos($file, $fromBytes) !== false) {
+                        $file = str_replace($fromBytes, $toBytes, $file);
+                        $progressText .= '<div class="action">BattlEye warning disabled for version ' . $tibiaClientVersion . '</div>';
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
         $newClientExe = '';
         $matches = [];
         $lines = explode("\r\n", $file);
 
-        $progressText = '';
         foreach ($lines as $i => $line) {
-            foreach ($this->battlEyeDisableBytes as $fromBytes => $toBytes) {
-                if (strpos($line, $fromBytes) !== false) {
-                    $line = str_replace($fromBytes, $toBytes, $line);
-                    $progressText .= '<div class="action">BattlEye warning disabled</div>';
-                }
-            }
-
             foreach ($this->services as $key => $value) {
                 if ($value !== '') {
                     if (strpos($line, $key) === 0) {
