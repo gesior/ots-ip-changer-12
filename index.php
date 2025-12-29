@@ -116,7 +116,7 @@ echo '<form action="index.php" method="post" enctype="multipart/form-data">
 Select file <b>client.exe</b> file:<br/>
 <input type="file" name="client_exe"><br/>';
 
-echo '<h3>RSA</h3><input type="text" class="rsa" name="rsa" value="' . htmlspecialchars($exeEditor->getRsa()) . '" />';
+echo '<h3>RSA (hexadecimal format)</h3><input type="text" class="rsa" name="rsa" value="' . htmlspecialchars($exeEditor->getRsa()) . '" />';
 
 foreach ($serviceCategories as $category => $services) {
     echo '<h3>' . $category . '</h3>';
@@ -129,5 +129,6 @@ foreach ($serviceCategories as $category => $services) {
 echo '<br>';
 echo '<div class="submit"><input type="submit" value="Change IP in client.exe" name="submit"></div>';
 echo '</form>';
-echo '<br />Code available on <a href="https://github.com/gesior/ots-ip-changer-12">https://github.com/gesior/ots-ip-changer-12</a>';
+echo '<br />Code available on <a href="https://github.com/gesior/ots-ip-changer-12">https://github.com/gesior/ots-ip-changer-12</a>
+| For Tibia Client 7.x-10.98 use <a href="https://ots.me/ots-ip-changer/">https://ots.me/ots-ip-changer/</a>';
 echo '</body></html>';
