@@ -85,6 +85,18 @@ class ExeEditor
                 // 14.11.0fbf6c
                 "\x00\x00\x00\x75\x0F\xE8\xC3\x43\xEF\xFF" => "\x00\x00\x00\xEB\x0F\xE8\xC3\x43\xEF\xFF",
             ],
+            '15.03' => [
+                // 15.03.afe753
+                "\x75\x0F\xE8\xDF" => "\xEB\x0F\xE8\xDF",
+            ],
+            '15.11' => [
+                // 15.11.57e218
+                "\x75\x0F\xE8\xC1\xEE\xFF" => "\xEB\x0F\xE8\xC1\xEE\xFF",
+            ],
+            '15.20' => [
+                // 15.20.8007a5
+                "\x75\x0F\xE8\x73\x20\xEE\xFF" => "\xEB\x0F\xE8\x73\x20\xEE\xFF",
+            ],
         ];
 
         $this->rsa = '9B646903B45B07AC956568D87353BD7165139DD7940703B03E6DD079399661B4' .
