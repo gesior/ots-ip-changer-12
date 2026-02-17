@@ -160,19 +160,38 @@ class ExeEditor
 
         $newClientExe = '';
         $matches = [];
-        $lines = explode("\r\n", $file);
 
-        foreach ($lines as $i => $line) {
+        // Split by \r\n, \r, or \n - capture delimiters to preserve them
+        $lines = preg_split('/(\r\n|\n|\r)/', $file, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        // Track if file ends with delimiter
+        $endsWithDelimiter = !empty($file) && (substr($file, -2) === "\r\n" || substr($file, -1) === "\r" || substr($file, -1) === "\n");
+
+        for ($i = 0; $i < count($lines); $i++) {
+            $line = $lines[$i];
+            $delimiter = '';
+
+            // Check if next element is a delimiter
+            if ($i + 1 < count($lines) && ($lines[$i + 1] === "\r\n" || $lines[$i + 1] === "\r" || $lines[$i + 1] === "\n")) {
+                $delimiter = $lines[$i + 1];
+                $i++; // Skip the delimiter in next iteration
+            }
+
             foreach ($this->services as $key => $value) {
                 if ($value !== '') {
-                    if (strpos($line, $key) === 0) {
-                        $oldValue = substr($line, strlen($key) + 1);
+                    // Match pattern: key=value at the beginning of the line
+                    $pattern = $key . '=';
+                    if (strpos($line, $pattern) === 0) {
+                        // Extract everything after key= (including padding spaces)
+                        $oldValue = substr($line, strlen($pattern));
+
                         $fillBytes = strlen($oldValue) - strlen($value);
                         if ($fillBytes < 0) {
                             throw new RuntimeException(
                                 'Defined "' . $key . '" value "' . $value . '" is longer than original value "' . $oldValue . '". Cannot replace it.'
                             );
                         }
+
                         $line = $key . '=' . $value . str_repeat("\x20", $fillBytes);
 
                         $progressText .= '<div class="action">"' . $key . '" replaced</div>';
@@ -197,9 +216,9 @@ class ExeEditor
             }
 
             $newClientExe .= $line;
-            // some client .exes end with "\r\n" and some not, we must detect it
-            if ($i < count($lines) - 1 || empty($line)) {
-                $newClientExe .= "\r\n";
+            // Preserve original line endings, but don't add delimiter at the end if original file didn't have it
+            if (!empty($delimiter) && ($i < count($lines) - 1 || $endsWithDelimiter)) {
+                $newClientExe .= $delimiter;
             }
         }
 
